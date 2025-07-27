@@ -1,6 +1,5 @@
 import org.gradle.api.tasks.Copy
 import org.gradle.internal.os.OperatingSystem
-import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     alias(libs.plugins.android.application) apply false
@@ -71,33 +70,3 @@ tasks.register("installGitHooks") {
         println("✅ Git pre-commit hook installed.")
     }
 }
-
-// // Register a task to copy git hooks
-// // Copy Git hooks
-// tasks.register<Copy>("copyGitHooks") {
-//    description = "Copies the git hooks from /git-hooks to the .git folder."
-//    group = "git hooks"
-//    from("$rootDir/.hooks/pre-commit")
-//    into("$rootDir/.git/hooks/")
-// }
-//
-// // Install Git hooks
-// tasks.register<Exec>("installGitHooks") {
-//    description = "Installs the pre-commit git hooks from /git-hooks."
-//    group = "git hooks"
-//    workingDir = rootDir
-//    commandLine = listOf("chmod")
-//    args( "-R", "+x", ".git/hooks/")
-//    dependsOn("copyGitHooks")
-//
-//    doLast {
-//        logger.info("Git hook installed successfully.")
-//    }
-// }
-//
-// // Ensure Git hooks run before app:preBuild (in the root build.gradle.kts)
-// gradle.projectsEvaluated {
-//    project(":app").tasks.named("preBuild").configure {
-//        dependsOn(":installGitHooks")
-//    }
-// }
