@@ -1,6 +1,7 @@
 import org.gradle.api.tasks.Copy
-import org.gradle.api.tasks.Exec
+import org.gradle.internal.os.OperatingSystem
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
@@ -45,31 +46,58 @@ subprojects {
         }
     }
 }
-// Register a task to copy git hooks
-// Copy Git hooks
-tasks.register<Copy>("copyGitHooks") {
-    description = "Copies the git hooks from /git-hooks to the .git folder."
+val copyGitHooks by tasks.registering(Copy::class) {
+    description = "Copies pre-commit hook to the .git directory"
     group = "git hooks"
-    from("$rootDir/.hooks/pre-commit")
-    into("$rootDir/.git/hooks/")
+
+    from(layout.projectDirectory.dir(".hooks").file("pre-commit"))
+    into(layout.projectDirectory.dir(".git/hooks"))
 }
 
-// Install Git hooks
-tasks.register<Exec>("installGitHooks") {
-    description = "Installs the pre-commit git hooks from /git-hooks."
+tasks.register("installGitHooks") {
     group = "git hooks"
-    workingDir = rootDir
-    commandLine("chmod", "-R", "+x", ".git/hooks/")
-    dependsOn("copyGitHooks")
+    description = "Installs the pre-commit git hooks."
 
     doLast {
-        logger.info("Git hook installed successfully.")
+        val hookSrc = file("$rootDir/.hooks/pre-commit")
+        val hookDst = file("$rootDir/.git/hooks/pre-commit")
+
+        hookSrc.copyTo(hookDst, overwrite = true)
+
+        if (!OperatingSystem.current().isWindows) {
+            hookDst.setExecutable(true)
+        }
+
+        println("✅ Git pre-commit hook installed.")
     }
 }
 
-// Ensure Git hooks run before app:preBuild (in the root build.gradle.kts)
-gradle.projectsEvaluated {
-    project(":app").tasks.named("preBuild").configure {
-        dependsOn(":installGitHooks")
-    }
-}
+// // Register a task to copy git hooks
+// // Copy Git hooks
+// tasks.register<Copy>("copyGitHooks") {
+//    description = "Copies the git hooks from /git-hooks to the .git folder."
+//    group = "git hooks"
+//    from("$rootDir/.hooks/pre-commit")
+//    into("$rootDir/.git/hooks/")
+// }
+//
+// // Install Git hooks
+// tasks.register<Exec>("installGitHooks") {
+//    description = "Installs the pre-commit git hooks from /git-hooks."
+//    group = "git hooks"
+//    workingDir = rootDir
+//    commandLine = listOf("chmod")
+//    args( "-R", "+x", ".git/hooks/")
+//    dependsOn("copyGitHooks")
+//
+//    doLast {
+//        logger.info("Git hook installed successfully.")
+//    }
+// }
+//
+// // Ensure Git hooks run before app:preBuild (in the root build.gradle.kts)
+// gradle.projectsEvaluated {
+//    project(":app").tasks.named("preBuild").configure {
+//        dependsOn(":installGitHooks")
+//    }
+// }

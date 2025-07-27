@@ -12,3 +12,12 @@ git stash pop -q
 
 # return 1 exit code if running checks fails
 [ $RESULT -no 0 ] && exit 1
+
+##!/bin/bash
+#./gradlew ktlintFormat
+#
+#if [ $? -ne 0 ]; then
+#  echo "❌ Ktlint format failed. Please fix formatting before commit."
+#  exit 1
+#fi
+
