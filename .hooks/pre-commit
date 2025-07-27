@@ -1,0 +1,14 @@
+#!/bin/bash
+
+git stash -q --keep-index
+
+echo "Running ktlint Format over staged files and adds the fixed files back to the commit"
+
+./gradlew --quiet addKtlintFormatGitPreCommitHook
+
+RESULT=$?
+
+git stash pop -q
+
+# return 1 exit code if running checks fails
+[ $RESULT -no 0 ] && exit 1
