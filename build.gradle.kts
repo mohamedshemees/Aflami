@@ -1,4 +1,4 @@
-import org.gradle.api.tasks.Copy
+
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
@@ -45,17 +45,18 @@ subprojects {
         }
     }
 }
-val copyGitHooks by tasks.registering(Copy::class) {
-    description = "Copies pre-commit hook to the .git directory"
-    group = "git hooks"
-
-    from(layout.projectDirectory.dir(".hooks").file("pre-commit"))
-    into(layout.projectDirectory.dir(".git/hooks"))
-}
+// It copies the pre-commit hook to Git’s hooks folder so that Git can run it before every commit.
+// val copyGitHooks by tasks.registering(Copy::class) {
+//    description = "Copies pre-commit hook to the .git directory"
+//    group = "git hooks"
+//
+//    from(layout.projectDirectory.dir(".hooks").file("pre-commit"))
+//    into(layout.projectDirectory.dir(".git/hooks"))
+// }
 
 tasks.register("installGitHooks") {
-    group = "git hooks"
     description = "Installs the pre-commit git hooks."
+    group = "git hooks"
 
     doLast {
         val hookSrc = file("$rootDir/.hooks/pre-commit")
