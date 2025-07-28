@@ -12,7 +12,7 @@ data class MovieDto(
     val title: String? = null,
 
     @SerialName("genre_ids")
-    val genreIds: List<Int?>? = null,
+    val genreIds: List<Int>? = null,
 
     @SerialName("poster_path")
     val posterPath: String? = null,
@@ -25,4 +25,7 @@ data class MovieDto(
 
     @SerialName("vote_average")
     val voteAverage: Double? = null,
+
+    @SerialName("overview")
+    val overview: String? = null,
 )

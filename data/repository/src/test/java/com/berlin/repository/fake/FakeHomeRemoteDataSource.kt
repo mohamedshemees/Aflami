@@ -3,8 +3,8 @@ package com.berlin.repository.fake
 import com.berlin.repository.datasource.remote.HomeRemoteDataSource
 import com.berlin.repository.datasource.remote.dto.MovieDto
 import com.berlin.repository.datasource.remote.dto.TVShowDto
-import com.berlin.repository.datasource.remote.dto.TopRatedMoviesResponse
-import com.berlin.repository.datasource.remote.dto.TopRatedSeriesResponse
+import com.berlin.repository.datasource.remote.response.TopRatedMoviesResponse
+import com.berlin.repository.datasource.remote.response.TopRatedSeriesResponse
 
 class FakeHomeRemoteDataSource : HomeRemoteDataSource {
     override suspend fun getTopRatedMovies(page: Int): TopRatedMoviesResponse {

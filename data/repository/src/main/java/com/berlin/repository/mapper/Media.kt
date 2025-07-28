@@ -27,20 +27,10 @@ fun MediaDto.toLocal(query: String, type: String, page: Int, mediaType: String?)
     )
 }
 
-fun SearchingEntity.toMedia(): Media {
-    return Media(
-        id = this.id,
-        title = this.title,
-        rating = this.rating,
-        releaseYear = stringToLocalDate(releaseYear),
-        genre = this.genre,
-        poster = this.poster,
-        mediaType = this.mediaType
-    )
-}
+
 
 fun GenreDto.toDomain(): Genre {
-    return Genre(id = this.id, name = this.name)
+    return Genre(id = this.id?:0, name = this.name?:"ALL")
 }
 
 fun ContinueWatchingMovieEntity.toMovie(): Movie {
@@ -59,8 +49,8 @@ fun ContinueWatchingTVShowEntity.toTVShow(): TVShow {
         id = this.id,
         title = this.title,
         rating = this.rating,
-        releaseYear = stringToLocalDate(this.releaseYear),
-        genre = emptyList(),
+        releaseDate = stringToLocalDate(this.releaseYear).toString(),
+        genres = this,
         poster = this.posterUrl,
     )
 }
@@ -81,8 +71,8 @@ fun TVShow.toLocalEntity(): ContinueWatchingTVShowEntity {
         id = this.id,
         title = this.title,
         rating = this.rating,
-        releaseYear = this.releaseYear.toString(),
-        posterUrl = this.poster,
+        releaseYear = this.releaseDate.toString(),
+        posterUrl = this.posterURL,
         typeOfMedia = MediaType.TV_SHOW
     )
 }

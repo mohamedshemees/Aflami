@@ -45,10 +45,5 @@ object ApiConstants {
     const val NEW_TOKEN_ENDPOINT = "authentication/token/new"
     const val CREATE_SESSION_WITH_LOGIN_ENDPOINT = "authentication/token/validate_with_login"
     const val CREATE_SESSION_ENDPOINT = "authentication/session/new"
-    const val DELETE_SESSION_ENDPOINT = "authentication/session"
-    const val SESSION_ID = "session_id"
-    const val REQUEST_TOKEN = "request_token"
-    const val LOGIN_USERNAME = "username"
-    const val LOGIN_PASSWORD = "password"
     //endregion
 }

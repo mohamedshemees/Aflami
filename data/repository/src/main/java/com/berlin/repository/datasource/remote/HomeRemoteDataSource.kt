@@ -1,7 +1,7 @@
 package com.berlin.repository.datasource.remote
 
-import com.berlin.repository.datasource.remote.dto.TopRatedMoviesResponse
-import com.berlin.repository.datasource.remote.dto.TopRatedSeriesResponse
+import com.berlin.repository.datasource.remote.response.TopRatedMoviesResponse
+import com.berlin.repository.datasource.remote.response.TopRatedSeriesResponse
 
 interface HomeRemoteDataSource {
     suspend fun getTopRatedMovies(page: Int): TopRatedMoviesResponse

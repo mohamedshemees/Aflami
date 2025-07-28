@@ -1,9 +1,10 @@
 package com.berlin.entity
 
+import kotlinx.datetime.LocalDate
+
 data class Episode(
-    val airDate: String,
+    val airDate: LocalDate,
     val episodeNumber: Int,
-    val episodeType: String,
     val episodeId: Long,
     val name: String,
     val description: String,

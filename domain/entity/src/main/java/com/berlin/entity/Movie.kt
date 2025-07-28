@@ -7,12 +7,12 @@ data class Movie(
     val rating: Double,
     val releaseDate: String,
     val posterURL: String,
-    val screenShot: String,
-    val description: String,
+    val screenShot: String?=null,
+    val description: String?=null,
     val genres: List<Genre>,
-    val duration: Int,
-    val hasVideo: Boolean,
-    val productionCompanies: List<ProductionCompany>,
-    val originCountry: String,
-    val galleryUrl:List<String>
+    val duration: Int?=null,
+    val hasVideo: Boolean?= null,
+    val productionCompanies: List<ProductionCompany>? = null,
+    val originCountry: String?=null,
+    val galleryUrl:List<String>?=null
 )

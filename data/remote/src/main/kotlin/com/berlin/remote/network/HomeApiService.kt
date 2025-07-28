@@ -1,7 +1,7 @@
 package com.berlin.remote.network
 
-import com.berlin.repository.datasource.remote.dto.TopRatedMoviesResponse
-import com.berlin.repository.datasource.remote.dto.TopRatedSeriesResponse
+import com.berlin.repository.datasource.remote.response.TopRatedMoviesResponse
+import com.berlin.repository.datasource.remote.response.TopRatedSeriesResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

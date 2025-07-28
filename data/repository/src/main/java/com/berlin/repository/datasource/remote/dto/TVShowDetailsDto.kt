@@ -53,11 +53,11 @@ data class TVShowDetailsDto(
     @SerialName("poster_path")
     val posterPath: String?,
     @SerialName("production_companies")
-    val productionCompanies: List<ProductionCompany>?,
+    val productionCompanies: List<ProductionCompanyDto>?,
     @SerialName("production_countries")
     val productionCountries: List<ProductionCountry>?,
     @SerialName("seasons")
-    val seasons: List<Season>?,
+    val seasons: List<SeasonDto>?,
     @SerialName("spoken_languages")
     val spokenLanguages: List<SpokenLanguage>?,
     @SerialName("status")

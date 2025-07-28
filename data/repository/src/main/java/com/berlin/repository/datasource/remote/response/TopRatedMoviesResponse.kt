@@ -1,5 +1,7 @@
-package com.berlin.repository.datasource.remote.dto
+package com.berlin.repository.datasource.remote.response
 
+import com.berlin.repository.datasource.remote.dto.MovieDto
+import com.berlin.repository.datasource.remote.dto.TVShowDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

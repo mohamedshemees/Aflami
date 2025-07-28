@@ -1,4 +1,4 @@
-package com.berlin.repository.datasource.remote.dto
+package com.berlin.repository.datasource.remote.response
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

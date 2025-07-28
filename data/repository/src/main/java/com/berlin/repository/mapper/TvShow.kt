@@ -1,15 +1,13 @@
 package com.berlin.repository.mapper
 
-import com.berlin.entity.Season
 import com.berlin.entity.Episode
 import com.berlin.entity.TVShow
-import com.berlin.entity.TvShowDetails
 import com.berlin.repository.datasource.local.dto.SearchingEntity
-import com.berlin.repository.datasource.remote.dto.Season
 import com.berlin.repository.datasource.remote.dto.TVShowDetailsDto
 import com.berlin.repository.datasource.remote.dto.TVShowDto
 import com.berlin.repository.datasource.remote.dto.details.EpisodeDto
 import com.berlin.repository.datasource.remote.dto.details.EpisodesSeasonDto
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toLocalDate
 import java.time.Instant
 
@@ -98,7 +96,7 @@ fun Season.toEntity() = com.berlin.entity.Season(
 
 fun EpisodesSeasonDto.toDomain(): EpisodesSeason {
     return EpisodesSeason(
-        idSeason = this.id_Season,
+        idSeason = this.seasonId,
         name = this.name,
         episodes = this.episodes?.filterNotNull()?.map { it.toEpisode() },
         seasonNumber = this.seasonNumber,
@@ -107,14 +105,12 @@ fun EpisodesSeasonDto.toDomain(): EpisodesSeason {
 }
 fun EpisodeDto.toEpisode(): Episode {
     return Episode(
-        stillPath = this.stillPath,
-        airDate = this.airDate,
-        episodeNumber = this.episodeNumber,
-        episodeType = this.episodeType,
-        episodeId = this.id,
-        name = this.name,
-        description = this.overview,
-        duration = this.runtime.formatRuntime(),
+        airDate = this.airDate?.toLocalDate() ?: LocalDate(1970, 1, 1),
+        episodeNumber = this.episodeNumber?: 1,
+        episodeId = this.id?.toLong()?: 0L,
+        name = this.name?:"Episode Name",
+        description = this.overview?:"No description available",
+        duration = this.runtime.formatRuntime()?: 00:00,
         tvShowId = this.showId,
         rating = this.voteAverage
     )

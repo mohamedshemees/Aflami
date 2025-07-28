@@ -13,7 +13,7 @@ data class EpisodesSeasonDto(
     @SerialName("_id")
     val id: String? = null,
     @SerialName("id")
-    val id_Season: Int? = null,
+    val seasonId: Int? = null,
     @SerialName("name")
     val name: String? = null,
     @SerialName("overview")

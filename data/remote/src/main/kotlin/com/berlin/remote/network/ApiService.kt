@@ -1,17 +1,17 @@
 package com.berlin.remote.network
 
-import com.berlin.repository.datasource.remote.dto.BaseResponse
-import com.berlin.repository.datasource.remote.dto.GenreResponse
+import com.berlin.repository.datasource.remote.response.BaseResponse
+import com.berlin.repository.datasource.remote.response.GenreResponse
 import com.berlin.repository.datasource.remote.dto.MediaCastResponse
 import com.berlin.repository.datasource.remote.dto.MediaImagesResponse
 import com.berlin.repository.datasource.remote.dto.MovieDetailsDto
 import com.berlin.repository.datasource.remote.dto.MovieDto
-import com.berlin.repository.datasource.remote.dto.MovieResponse
+import com.berlin.repository.datasource.remote.response.MovieResponse
 import com.berlin.repository.datasource.remote.dto.PersonDto
-import com.berlin.repository.datasource.remote.dto.ReviewResponse
+import com.berlin.repository.datasource.remote.response.ReviewResponse
 import com.berlin.repository.datasource.remote.dto.TVShowDetailsDto
 import com.berlin.repository.datasource.remote.dto.TVShowDto
-import com.berlin.repository.datasource.remote.dto.TVShowResponse
+import com.berlin.repository.datasource.remote.response.TVShowResponse
 import com.berlin.repository.datasource.remote.dto.details.EpisodesSeasonDto
 import retrofit2.Response
 import retrofit2.http.GET
