@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_internet">لا يوجد اتصال بالانترنت</string>
+    <string name="network_error">خطأ في الشبكة</string>
+    <string name="unexpected_error">خطأ غير متوقع</string>
+    <string name="empty_response">الرد فارغ</string>
+    <string name="bad_request">طلب غير صالح</string>
+    <string name="unauthorized">غير مصرح به</string>
+    <string name="forbidden">الوصول مرفوض</string>
+    <string name="not_found">غير موجود</string>
+    <string name="rate_limit">تم تجاوز الحد المسموح للطلبات</string>
+    <string name="internal_server_error">خطأ في الخادم</string>
+</resources>

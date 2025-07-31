@@ -4,11 +4,12 @@ import com.berlin.entity.InvalidLoginApiKeyException
 import com.berlin.entity.InvalidLoginTokenException
 import com.berlin.entity.InvalidUsernameOrPasswordException
 import com.berlin.entity.AuthorizationException
+import com.berlin.repository.R
 
 fun String?.toException() = when (this) {
-    String.Companion.invalidToken -> InvalidLoginTokenException("Invalid request token")
-    String.Companion.invalidUsernameOrPassword -> InvalidUsernameOrPasswordException("Invalid username or password")
-    String.Companion.invalidApiKey -> InvalidLoginApiKeyException("Invalid login api key")
-    String.Companion.sessionDenied -> AuthorizationException("Session Denied")
-    else -> Exception("Unknown error $this")
+    String.Companion.invalidToken -> InvalidLoginTokenException(R.string.invalid_token.toString())
+    String.Companion.invalidUsernameOrPassword -> InvalidUsernameOrPasswordException(R.string.invalid_username_password.toString())
+    String.Companion.invalidApiKey -> InvalidLoginApiKeyException(R.string.invalid_api_key.toString())
+    String.Companion.sessionDenied -> AuthorizationException(R.string.session_denied.toString())
+    else -> Exception("${R.string.unknown_error} $this")
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="invalid_token">رمز طلب غير صالح</string>
+    <string name="invalid_username_password">اسم المستخدم أو كلمة المرور غير صحيحة</string>
+    <string name="invalid_api_key">مفتاح تسجيل الدخول غير صالح</string>
+    <string name="session_denied">تم رفض الجلسة</string>
+    <string name="unknown_error">خطأ غير معروف</string>
+</resources>

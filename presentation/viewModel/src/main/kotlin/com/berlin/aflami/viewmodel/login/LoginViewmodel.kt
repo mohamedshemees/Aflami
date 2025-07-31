@@ -4,6 +4,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewModelScope
 import com.berlin.aflami.viewmodel.base.BaseViewModel
 import com.berlin.aflami.viewmodel.util.SNACK_BAR_DURATION
+import com.berlin.viewModel.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import usecase.ValidatePasswordUseCase
@@ -49,7 +50,7 @@ class LoginViewmodel(
                 state.value.formUiState.password.text
             )
         if (!isValidated) {
-            handleErrorState("Invalid username or password")
+            handleErrorState(R.string.invalid_username_password.toString())
             return
         }
         updateState { it.copy(isLoading = true) }

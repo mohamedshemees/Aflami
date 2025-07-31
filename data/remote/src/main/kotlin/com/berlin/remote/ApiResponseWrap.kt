@@ -22,24 +22,24 @@ suspend fun <T> wrapApiResponse(
     try {
         response = request()
     } catch (_: UnknownHostException) {
-        throw NoInternetException("No internet connection")
+        throw NoInternetException(R.string.no_internet.toString())
     } catch (_: IOException) {
-        throw NetworkException("Network error")
+        throw NetworkException(R.string.network_error.toString())
     } catch (_: Exception) {
-        throw DataParseException("Unexpected error")
+        throw DataParseException(R.string.unexpected_error.toString())
     }
 
     if (response.isSuccessful) {
-        return response.body() ?: throw EmptyResponseException("Response body is null")
+        return response.body() ?: throw EmptyResponseException(R.string.empty_response.toString())
     } else {
         throw when (response.code()) {
             400 -> BadRequestException(response.message())
-            401 -> AuthorizationException("Unauthorized")
-            403 -> ForbiddenException("Access forbidden")
-            404 -> NotFoundException("Not found")
-            429 -> RateLimitException("Rate limit exceeded")
-            500 -> ServerException("Internal server error")
-            else -> ServerException("Unexpected error: ${response.code()}")
+            401 -> AuthorizationException(R.string.unauthorized.toString())
+            403 -> ForbiddenException(R.string.forbidden.toString())
+            404 -> NotFoundException(R.string.not_found.toString())
+            429 -> RateLimitException(R.string.rate_limit.toString())
+            500 -> ServerException(R.string.internal_server_error.toString())
+            else -> ServerException("${R.string.unexpected_error}: ${response.code()}")
         }
     }
 }

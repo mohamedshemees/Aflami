@@ -5,4 +5,5 @@
     <string name="there_is_no_more_media">There is no more media!</string>
     <string name="there_is_no_gallery">There is no gallery!</string>
     <string name="unknown_error" >Unknown Error</string>
+    <string name="invalid_username_password">Invalid username or password</string>
 </resources>

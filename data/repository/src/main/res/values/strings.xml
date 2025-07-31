@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="invalid_token">Invalid request token</string>
+    <string name="invalid_username_password">Invalid username or password</string>
+    <string name="invalid_api_key">Invalid login API key</string>
+    <string name="session_denied">Session denied</string>
+    <string name="unknown_error">Unknown error</string>
+</resources>

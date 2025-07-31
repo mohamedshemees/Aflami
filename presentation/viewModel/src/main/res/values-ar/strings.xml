@@ -5,4 +5,5 @@
     <string name="there_is_no_more_media">لا توجد وسائط!</string>
     <string name="there_is_no_gallery">لا توجد صور!</string>
     <string name="unknown_error">خطأ غير معروف</string>
+    <string name="invalid_username_password">اسم المستخدم أو كلمة المرور غير صحيحة</string>
 </resources>

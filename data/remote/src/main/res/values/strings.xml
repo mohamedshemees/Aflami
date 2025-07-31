@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_internet">No internet connection</string>
+    <string name="network_error">Network error</string>
+    <string name="unexpected_error">Unexpected error</string>
+    <string name="empty_response">Response body is null</string>
+    <string name="bad_request">Bad request</string>
+    <string name="unauthorized">Unauthorized</string>
+    <string name="forbidden">Access forbidden</string>
+    <string name="not_found">Not found</string>
+    <string name="rate_limit">Rate limit exceeded</string>
+    <string name="internal_server_error">Internal server error</string>
+</resources>
