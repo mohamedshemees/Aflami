@@ -38,13 +38,13 @@ data class MediaDetailsUiState(
         return Movie(
             id = id,
             title = title,
-            overview = overview,
-            releaseYear = releaseYear.toLocalDate1(),
+            description = overview,
+            releaseDate = releaseDate.toLocalDate1(),
             rating = rating,
-            runtime = 0,
-            genre = emptyList(),
+            duration = 0,
+            genres = emptyList(),
             poster = posterUrl,
-            backdropPath = backdropUrl,
+            screenShot = backdropUrl,
             releaseDate = releaseYear,
         )
     }
