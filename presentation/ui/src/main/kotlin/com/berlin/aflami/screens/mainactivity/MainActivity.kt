@@ -2,12 +2,14 @@ package com.berlin.aflami.screens.mainactivity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.berlin.aflami.navigation.AflamiNavGraph
 import com.berlin.aflami.ui.theme.AflamiTheme
@@ -21,13 +23,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
 
         val splashScreen = installSplashScreen()
 
         splashScreen.setKeepOnScreenCondition {
             mainViewModel.isLoading
         }
-        enableEdgeToEdge()
         setContent {
             AflamiTheme {
                 AflamiNavGraph(
@@ -42,3 +44,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+//private fun ComponentActivity.enableEdgeToEdge(
+//    statusBarStyle: SystemBarStyle = SystemBarStyle.auto(Color.Transparent, Color.Transparent),
+//    )
