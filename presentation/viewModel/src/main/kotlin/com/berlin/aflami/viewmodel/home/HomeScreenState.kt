@@ -6,17 +6,16 @@ import com.berlin.aflami.viewmodel.shareduistate.MediaUiState
 import com.berlin.aflami.viewmodel.shareduistate.MovieUIState
 
 
-data class HomeUiState(
-
-    val mediaContinueWatching: List<MediaUiState> = emptyList(),
-    val upcomingMovies: List<MovieUIState> = emptyList(),
+data class HomeScreenState(
+    val continueWatchingList: List<MediaUiState> = emptyList(),
+    val upcomingMoviesList: List<MovieUIState> = emptyList(),
     val upcomingMovieGenres: List<GenreUiState> = defaultGenres,
-    val selectedRating: Float = 1f,
+//    val selectedRating: Float = 1f,
     val selectedGenres: Int = -1,
     val topRatedMediaUiState: TopRatedMediaUiState = TopRatedMediaUiState(),
     val popularMedia: PopularMediaUiState = PopularMediaUiState(),
     val isLoading: Boolean = false,
-    val error: ErrorUiState? = null
+    val errorUiState: ErrorUiState? = null
 ) {
     companion object {
         val defaultGenres = listOf(GenreUiState(-1, "All", isSelected = true))

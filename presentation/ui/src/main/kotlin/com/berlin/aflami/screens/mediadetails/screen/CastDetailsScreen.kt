@@ -35,7 +35,7 @@ fun CastDetailsScreen(
     viewmodel: CastViewModel = koinViewModel(),
 ) {
 
-    val castState by viewmodel.state.collectAsState()
+    val castState by viewmodel.screenState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewmodel.effect.collect { event ->

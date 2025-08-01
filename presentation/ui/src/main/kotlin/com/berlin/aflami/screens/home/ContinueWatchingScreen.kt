@@ -42,7 +42,7 @@ fun ContinueWatchingScreen(
     onEffect: (ContinueWatchingMediaEffect) -> Unit
 ) {
 
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.screenState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect {

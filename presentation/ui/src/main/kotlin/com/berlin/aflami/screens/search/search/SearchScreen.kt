@@ -66,7 +66,7 @@ import org.koin.androidx.compose.koinViewModel
 fun SearchScreen(
     navController: NavController, viewModel: SearchViewModel = koinViewModel()
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.screenState.collectAsStateWithLifecycle()
     val recentSearchState = viewModel.recentSearchState.collectAsState()
 
 

@@ -34,7 +34,7 @@ class ContinueWatchingMediaViewModel(
     }
 
     private fun getContinueWatchingMedia() {
-        _state.update {
+        _screenState.update {
             it.copy(isLoading = true, error = null)
         }
         tryToCall(
@@ -52,7 +52,7 @@ class ContinueWatchingMediaViewModel(
                 }
             },
             onSuccess = { continueWatchingMedia ->
-                _state.update {
+                _screenState.update {
                     it.copy(
                         continueWatchingItems = continueWatchingMedia,
                         isLoading = false,
@@ -61,7 +61,7 @@ class ContinueWatchingMediaViewModel(
 
             },
             onError = { throwable ->
-                _state.update {
+                _screenState.update {
                     it.copy(
                         error = throwable.message
                     )

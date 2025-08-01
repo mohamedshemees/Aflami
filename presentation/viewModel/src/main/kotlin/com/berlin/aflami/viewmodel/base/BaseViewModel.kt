@@ -15,18 +15,18 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<S, E>(
-    initialState: S
+abstract class BaseViewModel<SCREEN_STATE, SCREEN_EFFECT>(
+    initialState: SCREEN_STATE,
 ) : ViewModel() {
-    protected val _state = MutableStateFlow(initialState)
-    val state = _state.asStateFlow()
+    protected val _screenState = MutableStateFlow(initialState)
+    val screenState = _screenState.asStateFlow()
 
-    protected val _effect = MutableSharedFlow<E>()
+    protected val _effect = MutableSharedFlow<SCREEN_EFFECT>()
     val effect = _effect.asSharedFlow()
 
-    protected fun <T> tryToCall(
-        call: suspend () -> T,
-        onSuccess: (T) -> Unit,
+    protected fun <CallReturn> tryToCall(
+        call: suspend () -> CallReturn,
+        onSuccess: (CallReturn) -> Unit,
         onError: (error: ErrorUiState) -> Unit,
         dispatcher: CoroutineDispatcher = Dispatchers.IO,
     ) {
@@ -36,9 +36,9 @@ abstract class BaseViewModel<S, E>(
                 onSuccess(result)
             } catch (e: UnauthorizedException) {
                 onError(InvalidationErrorState(e.message.toString()))
-            }  catch (e: NetworkException) {
+            } catch (e: NetworkException) {
                 onError(NetworkErrorState(e.message.toString()))
-            }  catch (e: NotFoundException) {
+            } catch (e: NotFoundException) {
                 onError(ErrorUiState(e.message.toString()))
             } catch (e: ServerException) {
                 onError(ErrorUiState(e.message.toString()))
@@ -48,13 +48,11 @@ abstract class BaseViewModel<S, E>(
         }
     }
 
-    protected fun updateState(updater: (S) -> S) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _state.update(updater)
-        }
+    protected fun updateState(updater: (SCREEN_STATE) -> SCREEN_STATE) {
+        _screenState.update(updater)
     }
 
-    protected fun sendNewEffect(newEffect: E) {
+    protected fun sendNewEffect(newEffect: SCREEN_EFFECT) {
         viewModelScope.launch() {
             _effect.emit(newEffect)
         }

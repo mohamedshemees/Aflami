@@ -132,7 +132,7 @@ class MediaDetailsViewModelTest {
         advanceUntilIdle()
 
         // Then
-        val state = viewModel.state.value
+        val state = viewModel.screenState.value
         assertThat(state.isLoading).isFalse()
         assertThat(state.id).isEqualTo(1)
         assertThat(state.title).isEqualTo("Test Movie")
@@ -192,7 +192,7 @@ class MediaDetailsViewModelTest {
         advanceUntilIdle()
 
         // Then
-        val state = viewModel.state.value
+        val state = viewModel.screenState.value
         assertThat(state.isLoading).isFalse()
         assertThat(state.id).isEqualTo(2)
         assertThat(state.title).isEqualTo("Test Show")
@@ -221,7 +221,7 @@ class MediaDetailsViewModelTest {
         advanceUntilIdle()
 
         // Then
-        val state = viewModel.state.value
+        val state = viewModel.screenState.value
 
         assertThat(state.isLoading).isFalse()
         assertThat(state.error).isEqualTo(UiText.Dynamic(errorMessage)) // ✅ Correct check
@@ -242,7 +242,7 @@ class MediaDetailsViewModelTest {
         advanceUntilIdle()
 
         // Then
-        assertThat(viewModel.state.value.isPlaying).isTrue()
+        assertThat(viewModel.screenState.value.isPlaying).isTrue()
         assertThat(effects).containsExactly(MediaDetailsScreenEffect.PlayMedia(id = 1))
         job.cancel()
     }
@@ -266,7 +266,7 @@ class MediaDetailsViewModelTest {
         advanceUntilIdle()
 
         // Then
-        val state = viewModel.state.value
+        val state = viewModel.screenState.value
         assertThat(state.rowSection).isInstanceOf(RowSectionUiState.Success::class.java)
         val successState = state.rowSection as RowSectionUiState.Success
         assertThat(successState.content).isInstanceOf(TabContent.Reviews::class.java)
@@ -284,7 +284,7 @@ class MediaDetailsViewModelTest {
         advanceUntilIdle()
 
         // Then
-        val state = viewModel.state.value
+        val state = viewModel.screenState.value
         assertThat(state.rowSection).isInstanceOf(RowSectionUiState.NoDataFound::class.java)
 
         val noDataState = state.rowSection as RowSectionUiState.NoDataFound
@@ -302,7 +302,7 @@ class MediaDetailsViewModelTest {
         advanceUntilIdle()
 
         // Then
-        val state = viewModel.state.value
+        val state = viewModel.screenState.value
         assertThat(state.rowSection).isInstanceOf(RowSectionUiState.Success::class.java)
         val successState = state.rowSection as RowSectionUiState.Success
         assertThat(successState.content).isInstanceOf(TabContent.Gallery::class.java)
@@ -321,7 +321,7 @@ class MediaDetailsViewModelTest {
             advanceUntilIdle()
 
             // Then
-            val state = viewModel.state.value
+            val state = viewModel.screenState.value
             assertThat(state.rowSection).isInstanceOf(RowSectionUiState.NoDataFound::class.java)
 
             val noDataState = state.rowSection as RowSectionUiState.NoDataFound
@@ -342,7 +342,7 @@ class MediaDetailsViewModelTest {
         advanceUntilIdle()
 
         // Then
-        val state = viewModel.state.value
+        val state = viewModel.screenState.value
         assertThat(state.rowSection).isInstanceOf(RowSectionUiState.Success::class.java)
         val successState = state.rowSection as RowSectionUiState.Success
         assertThat(successState.content).isInstanceOf(TabContent.CompanyProduction::class.java)
@@ -371,7 +371,7 @@ class MediaDetailsViewModelTest {
         advanceUntilIdle()
 
         // Then
-        val state = viewModel.state.value
+        val state = viewModel.screenState.value
         assertThat(state.rowSection).isInstanceOf(RowSectionUiState.Success::class.java)
         val successState = state.rowSection as RowSectionUiState.Success
         assertThat(successState.content).isInstanceOf(TabContent.Season::class.java)
@@ -389,7 +389,7 @@ class MediaDetailsViewModelTest {
         advanceUntilIdle()
 
         // Then
-        val state = viewModel.state.value
+        val state = viewModel.screenState.value
         assertThat(state.rowSection).isInstanceOf(RowSectionUiState.Error::class.java)
         val errorState = state.rowSection as RowSectionUiState.Error
         assertThat(errorState.message).isEqualTo(errorMessage)
@@ -415,7 +415,7 @@ class MediaDetailsViewModelTest {
             advanceUntilIdle()
 
             // Then
-            val state = viewModel.state.value
+            val state = viewModel.screenState.value
             assertThat(state.rowSection).isInstanceOf(RowSectionUiState.Success::class.java)
             val successState = state.rowSection as RowSectionUiState.Success
             assertThat(successState.content).isInstanceOf(TabContent.MoreLikeThis::class.java)
@@ -507,7 +507,7 @@ class MediaDetailsViewModelTest {
         advanceUntilIdle()
 
         // Then
-        val state = viewModel.state.value
+        val state = viewModel.screenState.value
         assertThat(state.rowSection).isInstanceOf(RowSectionUiState.Success::class.java)
         val successState = state.rowSection as RowSectionUiState.Success
         val content = successState.content as TabContent.Gallery
@@ -519,7 +519,7 @@ class MediaDetailsViewModelTest {
         coEvery { getMovieReviewUseCase(1) } returns emptyList()
         viewModel.toggleMovieDetailsTab(MovieDetailsTabs.REVIEWS, 1, MediaType.MOVIE)
         advanceUntilIdle()
-        val rowSection = viewModel.state.value.rowSection
+        val rowSection = viewModel.screenState.value.rowSection
         assertThat(rowSection).isInstanceOf(RowSectionUiState.NoDataFound::class.java)
     }
 
@@ -528,7 +528,7 @@ class MediaDetailsViewModelTest {
         coEvery { getMovieGalleryUseCase(1) } returns listOf("gallery1.jpg")
         viewModel.toggleMovieDetailsTab(MovieDetailsTabs.GALLERY, 1, MediaType.MOVIE)
         advanceUntilIdle()
-        val content = (viewModel.state.value.rowSection as RowSectionUiState.Success).content
+        val content = (viewModel.screenState.value.rowSection as RowSectionUiState.Success).content
         assertThat((content as TabContent.Gallery).items).containsExactly("gallery1.jpg")
     }
 
@@ -538,7 +538,7 @@ class MediaDetailsViewModelTest {
         viewModel.companyProductionCache = listOf(company)
         viewModel.toggleMovieDetailsTab(MovieDetailsTabs.COMPANY_PRODUCTION, 1, MediaType.MOVIE)
         advanceUntilIdle()
-        val section = viewModel.state.value.rowSection as RowSectionUiState.Success
+        val section = viewModel.screenState.value.rowSection as RowSectionUiState.Success
         val companies = (section.content as TabContent.CompanyProduction).items
         assertThat(companies).containsExactly(company)
     }
@@ -593,7 +593,7 @@ class MediaDetailsViewModelTest {
         advanceUntilIdle()
 
         // THEN
-        val rowSection = viewModel.state.value.rowSection as RowSectionUiState.Success
+        val rowSection = viewModel.screenState.value.rowSection as RowSectionUiState.Success
         val seasonContent = rowSection.content as TabContent.Season
         assertThat(seasonContent.items[0]).isEqualTo(listOf(episode.toUiState()))
     }
@@ -604,7 +604,7 @@ class MediaDetailsViewModelTest {
         coEvery { getMovieReviewUseCase(1) } throws RuntimeException(errorMsg)
         viewModel.onShowReviewsClicked(1, MediaType.MOVIE)
         advanceUntilIdle()
-        val section = viewModel.state.value.rowSection as RowSectionUiState.Error
+        val section = viewModel.screenState.value.rowSection as RowSectionUiState.Error
         assertThat(section.message).isEqualTo(errorMsg)
     }
 
@@ -613,7 +613,7 @@ class MediaDetailsViewModelTest {
         viewModel.companyProductionCache = emptyList()
         viewModel.onShowCompanyProductionClicked()
         advanceUntilIdle()
-        assertThat(viewModel.state.value.rowSection)
+        assertThat(viewModel.screenState.value.rowSection)
             .isInstanceOf(RowSectionUiState.NoDataFound::class.java)
     }
 
@@ -623,7 +623,7 @@ class MediaDetailsViewModelTest {
         coEvery { getMovieGalleryUseCase(1) } throws RuntimeException(errorMsg)
         viewModel.onShowMediaGalleryClicked(1, MediaType.MOVIE)
         advanceUntilIdle()
-        val err = viewModel.state.value.rowSection as RowSectionUiState.Error
+        val err = viewModel.screenState.value.rowSection as RowSectionUiState.Error
         assertThat(err.message).isEqualTo(errorMsg)
     }
 
@@ -635,7 +635,7 @@ class MediaDetailsViewModelTest {
         coEvery { getSeasonEpisodesUseCase(1, 1) } returns listOf(episode2)
         viewModel.onSeasonsClicked(1, 2)
         advanceUntilIdle()
-        val content = (viewModel.state.value.rowSection as RowSectionUiState.Success).content as TabContent.Season
+        val content = (viewModel.screenState.value.rowSection as RowSectionUiState.Success).content as TabContent.Season
         assertThat(content.items[0]).isEqualTo(listOf(episode1.toUiState()))
         assertThat(content.items[1]).isEqualTo(listOf(episode2.toUiState()))
     }

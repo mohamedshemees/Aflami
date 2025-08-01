@@ -44,7 +44,7 @@ class SearchByCountryViewModelTest {
 
         advanceUntilIdle()
 
-        val state = viewModel.state.value
+        val state = viewModel.screenState.value
 
         assertThat(state.query).isEqualTo(input)
         assertThat(state.filteredCountries).isNotEmpty()
@@ -54,7 +54,7 @@ class SearchByCountryViewModelTest {
     fun `should hide dropdown when query is empty`() = runTest {
         viewModel.onCountryNameChanged("")
 
-        val state = viewModel.state.value
+        val state = viewModel.screenState.value
         assertThat(state.query).isEmpty()
         assertThat(state.filteredCountries.isEmpty() || state.dropDownExpanded.not()).isTrue()
     }
@@ -62,7 +62,7 @@ class SearchByCountryViewModelTest {
     @Test
     fun `should hide dropdown when onDismissDropDown called`() = runTest {
         viewModel.onDismissDropDown()
-        assertThat(viewModel.state.value.dropDownExpanded).isFalse()
+        assertThat(viewModel.screenState.value.dropDownExpanded).isFalse()
     }
 
     @Test
@@ -106,7 +106,7 @@ class SearchByCountryViewModelTest {
 
         advanceUntilIdle()
 
-        val state = viewModel.state.value
+        val state = viewModel.screenState.value
         assertThat(state.isLoading).isTrue()
         assertThat(state.isCountrySelected).isTrue()
         assertThat(state.dropDownExpanded).isFalse()

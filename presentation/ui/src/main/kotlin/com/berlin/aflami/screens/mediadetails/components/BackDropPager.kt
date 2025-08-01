@@ -26,10 +26,10 @@ import com.berlin.aflami.component.CircularIconButton
 import com.berlin.aflami.component.Rating
 import com.berlin.aflami.component.ShimmerBox
 import com.berlin.aflami.ui.theme.Theme
-import com.berlin.aflami.utils.formatRating
 import com.berlin.aflami.viewmodel.mediadetails.uistate.MediaDetailsUiState
 import com.berlin.designsystem.R
 import kotlinx.coroutines.delay
+import java.util.Locale
 
 @Composable
 fun BackdropPager(state: MediaDetailsUiState, onPlayClick: () -> Unit) {
@@ -88,5 +88,12 @@ fun BackdropPager(state: MediaDetailsUiState, onPlayClick: () -> Unit) {
                 tint = if (state.hasVideo) Theme.color.primary else Theme.color.disable
             )
         }
+    }
+}
+private fun formatRating(rating: Double): String {
+    return if (rating % 1 == 0.0) {
+        rating.toInt().toString()
+    } else {
+        String.format(Locale.getDefault(), "%.1f", rating).trimEnd('0').trimEnd('.')
     }
 }

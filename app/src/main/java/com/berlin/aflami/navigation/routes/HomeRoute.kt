@@ -17,18 +17,18 @@ fun NavGraphBuilder.home(
         HomeScreen(
             onEffect = { effect ->
                 when (effect) {
-                    is HomeScreenEffect.NavigateToContinueWatching ->{
+                    is HomeScreenEffect.NavigateToContinueWatchingScreen ->{
                         navController.navigate(
                             Destination.WatchedMediaDetails.route
                         )
                     }
-                    is HomeScreenEffect.NavigateToSearch->{
+                    is HomeScreenEffect.NavigateToSearchScreen->{
                         navController.navigate(
                             Destination.SearchScreen.route
                         )
                     }
-                    is HomeScreenEffect.NavigateToTopRating->{}
-                    is HomeScreenEffect.NavigateToMovieDetails->{
+                    is HomeScreenEffect.NavigateToTopRatingScreen->{}
+                    is HomeScreenEffect.NavigateToMediaDetailsScreen->{
                         navController.navigate(
                             Destination.MediaDetailsScreen.route(effect.id.toLong(), effect.mediaType)
                         )

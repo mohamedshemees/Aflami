@@ -46,7 +46,7 @@ import org.koin.androidx.compose.koinViewModel
 fun SearchByActorNameScreen(
     navController: NavController, viewModel: SearchByActorViewModel = koinViewModel()
 ) {
-    val uiState by viewModel.state.collectAsState()
+    val uiState by viewModel.screenState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect {

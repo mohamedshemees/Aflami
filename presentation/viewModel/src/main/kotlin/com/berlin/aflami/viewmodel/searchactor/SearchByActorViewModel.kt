@@ -11,7 +11,6 @@ import com.berlin.aflami.viewmodel.base.BaseViewModel
 import com.berlin.aflami.viewmodel.base.ErrorUiState
 import com.berlin.aflami.viewmodel.mapper.toUIState
 import com.berlin.aflami.viewmodel.shareduistate.MediaUiState
-import com.berlin.aflami.viewmodel.util.MediaType
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.debounce
@@ -34,7 +33,7 @@ class SearchByActorViewModel(
 
     private fun observeQuery() {
         viewModelScope.launch {
-            _state.map {
+            _screenState.map {
                 it.query
             }.debounce(600).filter { it.isNotEmpty() }.distinctUntilChanged()
                 .collect { searchMovies() }
@@ -50,7 +49,7 @@ class SearchByActorViewModel(
     }
 
     override fun onActorNameChanged(actorName: CharSequence) {
-        _state.update { it.copy(query = actorName.toString()) }
+        _screenState.update { it.copy(query = actorName.toString()) }
     }
 
     override fun onBackClicked() {
@@ -58,7 +57,7 @@ class SearchByActorViewModel(
     }
 
     private fun searchMovies() {
-        _state.update { it.copy(isLoading = true) }
+        _screenState.update { it.copy(isLoading = true) }
         tryToCall(
             call = {
                 Pager(
@@ -67,7 +66,7 @@ class SearchByActorViewModel(
                     ),
                     pagingSourceFactory = {
                         BasePagingSource { page ->
-                            searchByActorName(actorName = _state.value.query, page = page)
+                            searchByActorName(actorName = _screenState.value.query, page = page)
                         }
                     },
                 ).flow.map {
@@ -78,10 +77,10 @@ class SearchByActorViewModel(
     }
 
     private fun onSearchSuccess(movies: Flow<PagingData<MediaUiState>>) {
-        _state.update { it.copy(movies = movies, isLoading = false) }
+        _screenState.update { it.copy(movies = movies, isLoading = false) }
     }
 
     private fun onSearchError(error: ErrorUiState) {
-        _state.update { it.copy(error = error.message, isLoading = false) }
+        _screenState.update { it.copy(error = error.message, isLoading = false) }
     }
 }

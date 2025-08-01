@@ -1,7 +1,6 @@
 package com.berlin.aflami.screens.authentication
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -58,7 +57,6 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import com.berlin.aflami.component.SnackBar
 import com.berlin.aflami.component.SnackBarStatus
@@ -79,7 +77,7 @@ fun LoginScreen(
     viewmodel: LoginViewmodel = koinViewModel(),
     navController: NavController
 ) {
-    val uiState by viewmodel.state.collectAsState()
+    val uiState by viewmodel.screenState.collectAsState()
     LoginContent(uiState, viewmodel)
 
     LaunchedEffect(Unit) {

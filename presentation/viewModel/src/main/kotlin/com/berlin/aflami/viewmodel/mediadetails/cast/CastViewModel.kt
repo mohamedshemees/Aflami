@@ -28,7 +28,7 @@ class CastViewModel(
     }
 
     fun getMediaCast(mediaId: Long, mediaType: MediaType, language: String="US-EG") {
-        _state.update {
+        _screenState.update {
             it.copy(error = null, isLoading = true)
         }
         tryToCall(
@@ -39,7 +39,7 @@ class CastViewModel(
                 }
             },
             onSuccess = { cast ->
-                _state.update {
+                _screenState.update {
                     it.copy(
                         mediaCast = cast,
                         mediaType = mediaType,
@@ -48,7 +48,7 @@ class CastViewModel(
                 }
             },
             onError = { throwable ->
-                _state.update {
+                _screenState.update {
                     it.copy(
                         error = UiText.Dynamic(throwable.message).toString(),
                     )

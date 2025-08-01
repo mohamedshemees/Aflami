@@ -11,15 +11,14 @@ import com.berlin.aflami.viewmodel.base.BaseViewModel
 import com.berlin.aflami.viewmodel.base.ErrorUiState
 import com.berlin.aflami.viewmodel.mapper.toUIState
 import com.berlin.aflami.viewmodel.shareduistate.MovieUIState
-import com.berlin.aflami.viewmodel.util.getCountriesNames
-import com.berlin.aflami.viewmodel.util.getCountryIsoCode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import usecase.SearchByCountryUseCase
+import java.util.Locale
 
 class SearchByCountryViewModel(
-    private val searchByCountry: SearchByCountryUseCase
+    private val searchByCountry: SearchByCountryUseCase,
 ) : BaseViewModel<SearchByCountryScreenUiState, SearchByCountryEffect>(
     SearchByCountryScreenUiState()
 ), SearchByCountryInteractionListener {
@@ -27,12 +26,12 @@ class SearchByCountryViewModel(
     private val countriesNames = getCountriesNames()
 
     override fun onCountryNameChanged(countryName: CharSequence) {
-        _state.update {
+        _screenState.update {
             it.copy(
                 query = countryName.toString(),
                 filteredCountries = filterCountriesByName(countryName.toString()),
                 dropDownExpanded = countryName.isNotBlank()
-                        && state.value.filteredCountries.isNotEmpty()
+                        && screenState.value.filteredCountries.isNotEmpty()
             )
         }
     }
@@ -44,12 +43,14 @@ class SearchByCountryViewModel(
     }
 
     override fun onCountryClicked() {
-        _state.update { it.copy(
-            isLoading = true,
-            isCountrySelected = true,
-            dropDownExpanded = false,
-            error = null
-        ) }
+        _screenState.update {
+            it.copy(
+                isLoading = true,
+                isCountrySelected = true,
+                dropDownExpanded = false,
+                error = null
+            )
+        }
 
         tryToCall(
             call = {
@@ -58,7 +59,7 @@ class SearchByCountryViewModel(
                     pagingSourceFactory = {
                         BasePagingSource(
                             call = { page ->
-                                getCountryIsoCode(state.value.query)?.let {
+                                getCountryIsoCode(screenState.value.query)?.let {
                                     searchByCountry.invoke(query = it, page = page)
                                 } ?: emptyList()
                             }
@@ -74,23 +75,38 @@ class SearchByCountryViewModel(
     }
 
     private fun onSearchSuccess(movies: Flow<PagingData<MovieUIState>>) {
-        _state.update { it.copy(isLoading = false, movies = movies) }
+        _screenState.update { it.copy(isLoading = false, movies = movies) }
     }
 
     private fun onSearchError(error: ErrorUiState) {
         // TODO: Handle error
-        _state.update { it.copy(error = error.message, isLoading = false) }
+        _screenState.update { it.copy(error = error.message, isLoading = false) }
     }
 
     override fun onDismissDropDown() {
-        _state.update { it.copy(dropDownExpanded = false) }
+        _screenState.update { it.copy(dropDownExpanded = false) }
     }
 
     override fun onMovieClicked(movieId: Int) {
-        sendNewEffect(SearchByCountryEffect.NavigatedToMovieDetailsScreen(movieId,"MOVIE"))
+        sendNewEffect(SearchByCountryEffect.NavigatedToMovieDetailsScreen(movieId, "MOVIE"))
     }
 
     override fun onBackClicked() {
         sendNewEffect(SearchByCountryEffect.NavigatedBack)
+    }
+
+    private fun getCountriesNames(): List<String> {
+        return countryNameToIsoMap.keys.sorted()
+    }
+
+    private fun getCountryIsoCode(countryName: String): String? {
+        return countryNameToIsoMap[countryName]
+    }
+
+    private val countryNameToIsoMap: Map<String, String> by lazy {
+        Locale.getISOCountries().associateBy(
+            keySelector = { Locale("", it).displayCountry },
+            valueTransform = { it }
+        )
     }
 }

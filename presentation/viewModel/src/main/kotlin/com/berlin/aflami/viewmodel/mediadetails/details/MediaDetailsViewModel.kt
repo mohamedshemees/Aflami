@@ -8,14 +8,13 @@ import com.berlin.aflami.viewmodel.mapper.toUIStateMedia
 import com.berlin.aflami.viewmodel.mapper.toUiState
 import com.berlin.aflami.viewmodel.mediadetails.MovieDetailsTabs
 import com.berlin.aflami.viewmodel.mediadetails.MovieDetailsTabsUiState
+import com.berlin.aflami.viewmodel.mediadetails.uistate.CompanyProductionUiState
+import com.berlin.aflami.viewmodel.mediadetails.uistate.EpisodesUiState
+import com.berlin.aflami.viewmodel.mediadetails.uistate.MediaDetailsUiState
 import com.berlin.aflami.viewmodel.mediadetails.uistate.RowSectionUiState
 import com.berlin.aflami.viewmodel.mediadetails.uistate.TabContent
 import com.berlin.aflami.viewmodel.mediadetails.uistate.UiText
 import com.berlin.aflami.viewmodel.shareduistate.MediaType
-import com.berlin.aflami.viewmodel.mediadetails.uistate.CompanyProductionUiState
-import com.berlin.aflami.viewmodel.mediadetails.uistate.EpisodesUiState
-import com.berlin.aflami.viewmodel.mediadetails.uistate.MediaDetailsUiState
-import com.berlin.aflami.viewmodel.util.toggle
 import com.berlin.entity.Episode
 import com.berlin.viewModel.R
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,7 +49,7 @@ class MediaDetailsViewModel(
     private val seriesReviewUseCase: GetSeriesReviewUseCase,
     private val getSeasonEpisodesUseCase: GetSeasonEpisodesUseCase,
     private val addContinueWatchingMovieUseCase: AddContinueWatchingMovieUseCase,
-    private val addContinueWatchingTVShowUseCase: AddContinueWatchingTVShowUseCase
+    private val addContinueWatchingTVShowUseCase: AddContinueWatchingTVShowUseCase,
 ) : BaseViewModel<MediaDetailsUiState, MediaDetailsScreenEffect>(
     MediaDetailsUiState()
 ), MediaInteractionListener {
@@ -77,7 +76,7 @@ class MediaDetailsViewModel(
     val showLoginRequiredDialog = _showLoginRequiredDialog.asStateFlow()
 
     init {
-        if (_state.value.id == 0L && id != 0L) {
+        if (_screenState.value.id == 0L && id != 0L) {
             getMediaCast(id, type)
             getMediaDetails(id, type, "en-US")
             onShowReviewsClicked(id, type)
@@ -125,28 +124,28 @@ class MediaDetailsViewModel(
                             originalCountry = details.originalCountry,
                         )
                     }
-                    saveWatchedMedia(mediaType=mediaType)
+                    saveWatchedMedia(mediaType = mediaType)
                 }
             },
             onError = { errorState -> handleErrorState(errorState, updateRowSection = true) },
         )
     }
 
-    private fun saveWatchedMedia(mediaType: MediaType){
+    private fun saveWatchedMedia(mediaType: MediaType) {
         viewModelScope.launch {
             when (mediaType) {
-                MediaType.MOVIE -> addContinueWatchingMovieUseCase(_state.value.toMovie())
-                MediaType.TVSHOW -> addContinueWatchingTVShowUseCase(_state.value.toTVShow())
+                MediaType.MOVIE -> addContinueWatchingMovieUseCase(_screenState.value.toMovie())
+                MediaType.TVSHOW -> addContinueWatchingTVShowUseCase(_screenState.value.toTVShow())
             }
         }
     }
 
     fun isDescriptionExpanded(): Boolean {
-        return _state.value.isDescriptionExpanded
+        return _screenState.value.isDescriptionExpanded
     }
 
     fun isReviewExpanded(id: Long): Boolean {
-        return _state.value.expandedReviewIds.contains(id)
+        return _screenState.value.expandedReviewIds.contains(id)
     }
 
     fun showLoginDialog(show: Boolean) {
@@ -373,7 +372,11 @@ class MediaDetailsViewModel(
                 if (companyProductionCache?.isEmpty() == true) {
                     updateState { companyProduction ->
                         companyProduction.copy(
-                            rowSection = RowSectionUiState.NoDataFound(UiText.Resource(NO_COMPANY_PRODUCTION))
+                            rowSection = RowSectionUiState.NoDataFound(
+                                UiText.Resource(
+                                    NO_COMPANY_PRODUCTION
+                                )
+                            )
                         )
                     }
                 } else {
@@ -482,8 +485,8 @@ class MediaDetailsViewModel(
 
                 MovieDetailsTabs.COMPANY_PRODUCTION -> onShowCompanyProductionClicked()
                 MovieDetailsTabs.SEASON -> onSeasonsClicked(
-                    _state.value.id,
-                    _state.value.numberOfSeasons ?: 0
+                    _screenState.value.id,
+                    _screenState.value.numberOfSeasons ?: 0
                 )
             }
             current.copy(
@@ -506,4 +509,7 @@ class MediaDetailsViewModel(
             )
         }
     }
+
+    private fun Set<Long>.toggle(id: Long): Set<Long> =
+        if (contains(id)) this - id else this + id
 }

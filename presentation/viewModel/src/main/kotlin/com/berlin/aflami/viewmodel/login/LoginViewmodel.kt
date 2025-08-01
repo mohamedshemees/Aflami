@@ -2,7 +2,6 @@ package com.berlin.aflami.viewmodel.login
 
 import androidx.lifecycle.viewModelScope
 import com.berlin.aflami.viewmodel.base.BaseViewModel
-import com.berlin.aflami.viewmodel.util.SNACK_BAR_DURATION
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import usecase.ValidatePasswordUseCase
@@ -44,8 +43,8 @@ class LoginViewmodel(
 
     override fun onLoginClicked() {
         val isValidated =
-            usernameValidationUseCase(state.value.formUiState.username) && passwordValidationUseCase(
-                state.value.formUiState.password
+            usernameValidationUseCase(screenState.value.formUiState.username) && passwordValidationUseCase(
+                screenState.value.formUiState.password
             )
         if (!isValidated) {
             handleErrorState()
@@ -54,7 +53,7 @@ class LoginViewmodel(
         updateState { it.copy(isLoading = true) }
         viewModelScope.launch {
             try {
-                loginUseCase(state.value.formUiState.username, state.value.formUiState.password)
+                loginUseCase(screenState.value.formUiState.username, screenState.value.formUiState.password)
                 updateState { it.copy(isLoading = false) }
                 sendNewEffect(newEffect = LoginEffect.NavigateToHome)
             } catch (e: Exception) {
@@ -84,4 +83,7 @@ class LoginViewmodel(
             }
         }
     }
-}
+    companion object {
+        const val SNACK_BAR_DURATION = 3000L
+    }
+    }

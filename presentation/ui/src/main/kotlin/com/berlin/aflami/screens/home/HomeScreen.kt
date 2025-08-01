@@ -31,18 +31,18 @@ import com.berlin.aflami.component.SectionTitle
 import com.berlin.aflami.screens.home.component.MediaSections
 import com.berlin.aflami.screens.home.component.PosterSlider
 import com.berlin.aflami.ui.theme.Theme
-import com.berlin.aflami.viewmodel.home.HomeInteractionListener
+import com.berlin.aflami.viewmodel.home.HomeScreenInteractionListener
 import com.berlin.aflami.viewmodel.home.HomeScreenEffect
-import com.berlin.aflami.viewmodel.home.HomeViewModel
-import com.berlin.aflami.viewmodel.home.HomeUiState
+import com.berlin.aflami.viewmodel.home.HomeScreenViewModel
+import com.berlin.aflami.viewmodel.home.HomeScreenState
 import com.berlin.ui.R
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = koinViewModel(), onEffect: (HomeScreenEffect) -> Unit
+    viewModel: HomeScreenViewModel = koinViewModel(), onEffect: (HomeScreenEffect) -> Unit
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.screenState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.getContinueWatchingMedia()
@@ -59,7 +59,7 @@ fun HomeScreen(
 
 @Composable
 private fun HomeContent(
-    state: HomeUiState, listener: HomeInteractionListener
+    state: HomeScreenState, listener: HomeScreenInteractionListener
 ) {
     val pagerState = rememberPagerState(
         initialPage = 0, pageCount = { state.popularMedia.popularMedia.size })
@@ -114,7 +114,7 @@ private fun HomeContent(
                             modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
                             mediaList = state.popularMedia.popularMedia,
                             pagerState = pagerState,
-                            onClick = { listener.onClickPopularMovieCard(it.id,it.mediaType) }
+                            onClick = { listener.onPopularMovieCardClicked(it.id,it.mediaType) }
                         )
 
                         currentMedia?.let { media ->
@@ -147,8 +147,8 @@ private fun HomeContent(
         item {
             MediaSections(
                 onShowAllContinueWatchingClick = {
-                    listener.onShowAllContinueWatchingClicked()
-                }, state = state.mediaContinueWatching, sectionTitleId = R.string.continue_watching
+                    listener.onAllContinueWatchingClicked()
+                }, state = state.continueWatchingList, sectionTitleId = R.string.continue_watching
             )
             val lazyListState = rememberLazyListState()
             Box(

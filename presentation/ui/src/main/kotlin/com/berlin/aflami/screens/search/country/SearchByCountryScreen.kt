@@ -47,7 +47,7 @@ fun SearchByCountryScreen(
     navController: NavController,
     viewModel: SearchByCountryViewModel = koinViewModel()
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.screenState.collectAsState()
     SearchByCountryContent(
         navController = navController,
         state = state,

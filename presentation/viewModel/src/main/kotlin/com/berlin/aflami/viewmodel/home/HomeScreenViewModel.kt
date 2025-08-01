@@ -16,25 +16,25 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import usecase.GetMovieGenresUseCase
-import usecase.GetPopularMoviesUseCase
-import usecase.GetPopularTVShowsUseCase
-import usecase.GetTopRatedMoviesUseCase
-import usecase.GetTopRatedSeriesUseCase
-import usecase.GetUpComingMoviesUseCase
-import usecase.home.GetContinueWatchingMovieUseCase
-import usecase.home.GetContinueWatchingTVShowUseCase
+import usecase.movie.ContinueWatchingMovieUseCase
+import usecase.movie.GetMovieGenresUseCase
+import usecase.movie.GetPopularMoviesUseCase
+import usecase.movie.GetTopRatedMoviesUseCase
+import usecase.movie.GetUpComingMoviesUseCase
+import usecase.tvshow.ContinueWatchingTVShowUseCase
+import usecase.tvshow.GetPopularTVShowsUseCase
+import usecase.tvshow.GetTopRatedTVShowUseCase
 
-class HomeViewModel(
+class HomeScreenViewModel(
     private val popularMoviesUseCase: GetPopularMoviesUseCase,
     private val popularTVShowsUseCase: GetPopularTVShowsUseCase,
     private val getUpComingMoviesUseCase: GetUpComingMoviesUseCase,
     private val getMoviesByGenreUseCase: GetMovieGenresUseCase,
-    private val getWatchedMovieUseCase: GetContinueWatchingMovieUseCase,
-    private val getWatchedTVShowUseCase: GetContinueWatchingTVShowUseCase,
-    private val getTopRatedSeriesUseCase: GetTopRatedSeriesUseCase,
+    private val getWatchedMovieUseCase: ContinueWatchingMovieUseCase,
+    private val getWatchedTVShowUseCase: ContinueWatchingTVShowUseCase,
+    private val getTopRatedSeriesUseCase: GetTopRatedTVShowUseCase,
     private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
-) : BaseViewModel<HomeUiState, HomeScreenEffect>(HomeUiState()), HomeInteractionListener {
+) : BaseViewModel<HomeScreenState, HomeScreenEffect>(HomeScreenState()), HomeScreenInteractionListener {
 
     private val _movies = MutableStateFlow<List<MediaUiState>>(emptyList())
     private val _tvShows = MutableStateFlow<List<MediaUiState>>(emptyList())
@@ -48,7 +48,7 @@ class HomeViewModel(
     private fun popularMedia(language: String) {
 
         updateState {
-            it.copy(isLoading = true, error = null)
+            it.copy(isLoading = true, errorUiState = null)
         }
         viewModelScope.launch {
             try {
@@ -103,18 +103,18 @@ class HomeViewModel(
 
 
     private fun onPopularMediaError(throwable: ErrorUiState) {
-        _state.update { it.copy(error = throwable, isLoading = false) }
+        _screenState.update { it.copy(errorUiState = throwable, isLoading = false) }
     }
 
     override fun onSearchClicked() {
-        sendNewEffect(HomeScreenEffect.NavigateToSearch)
+        sendNewEffect(HomeScreenEffect.NavigateToSearchScreen)
     }
 
-    override fun onShowAllContinueWatchingClicked() {
-        sendNewEffect(HomeScreenEffect.NavigateToContinueWatching)
+    override fun onAllContinueWatchingClicked() {
+        sendNewEffect(HomeScreenEffect.NavigateToContinueWatchingScreen)
     }
 
-    override fun onShowAllTopRating() {
+    override fun onAllTopRatingClicked() {
         viewModelScope.launch {
             tryToCall(
                 call = {
@@ -125,7 +125,7 @@ class HomeViewModel(
                     (topRatedMovies + topRatedSeries).sortedByDescending { it.rating }
                 },
                 onSuccess = { newTopRatedMedia ->
-                    _state.update { oldState ->
+                    _screenState.update { oldState ->
                         oldState.copy(
                             topRatedMediaUiState = oldState.topRatedMediaUiState.copy(
                                 topRatedMedia = newTopRatedMedia,
@@ -136,7 +136,7 @@ class HomeViewModel(
                     }
                 },
                 onError = { errorUIState ->
-                    _state.update { oldState ->
+                    _screenState.update { oldState ->
                         oldState.copy(
                             topRatedMediaUiState = oldState.topRatedMediaUiState.copy(
                                 topRatedMedia = null,
@@ -155,16 +155,16 @@ class HomeViewModel(
     }
 
 
-    override fun onClickUpcomingMovieCard(id: Long) {
-        sendNewEffect(HomeScreenEffect.NavigateToMovieDetails(id, MediaType.MOVIE.name))
+    override fun onUpcomingMovieCardClicked(movieId: Long) {
+        sendNewEffect(HomeScreenEffect.NavigateToMediaDetailsScreen(movieId, MediaType.MOVIE.name))
     }
 
-    override fun onClickPopularMovieCard(id: Long, mediaType: MediaType) {
-        sendNewEffect(HomeScreenEffect.NavigateToMovieDetails(id, mediaType.name))
+    override fun onPopularMovieCardClicked(movieId: Long, mediaType: MediaType) {
+        sendNewEffect(HomeScreenEffect.NavigateToMediaDetailsScreen(movieId, mediaType.name))
     }
 
 
-    override fun onChangeUpcomingMovieGenre(genreId: Int) {
+    override fun onSelectUpcomingGenre(genreId: Int) {
         updateState {
             val selected = it.upcomingMovieGenres.map { genre ->
                 genre.copy(isSelected = genre.id == genreId)
@@ -180,7 +180,7 @@ class HomeViewModel(
         tryToCall(call = {
             getUpComingMoviesUseCase()
         }, onSuccess = { movies ->
-            val genreId = state.value.selectedGenres
+            val genreId = screenState.value.selectedGenres
             val filteredMovies = if (genreId == -1) {
                 movies
             } else {
@@ -190,7 +190,7 @@ class HomeViewModel(
             }
             updateState { state ->
                 state.copy(
-                    upcomingMovies = filteredMovies.map { movie ->
+                    upcomingMoviesList = filteredMovies.map { movie ->
                         movie.toUIState()
                     }, isLoading = false
                 )
@@ -198,7 +198,7 @@ class HomeViewModel(
         }, onError = { error ->
             updateState { state ->
                 state.copy(
-                    error = error, isLoading = false
+                    errorUiState = error, isLoading = false
                 )
             }
         })
@@ -228,7 +228,7 @@ class HomeViewModel(
             onError = { error ->
                 updateState { state ->
                     state.copy(
-                        error = error, isLoading = false
+                        errorUiState = error, isLoading = false
                     )
                 }
             },
@@ -237,8 +237,8 @@ class HomeViewModel(
 
 
     fun getContinueWatchingMedia() {
-        _state.update {
-            it.copy(isLoading = true, error = null)
+        _screenState.update {
+            it.copy(isLoading = true, errorUiState = null)
         }
         tryToCall(
             call = {
@@ -255,18 +255,18 @@ class HomeViewModel(
                 }
             },
             onSuccess = { continueWatchingMedia ->
-                _state.update {
+                _screenState.update {
                     it.copy(
-                        mediaContinueWatching = continueWatchingMedia,
+                        continueWatchingList = continueWatchingMedia,
                         isLoading = false,
                     )
                 }
 
             },
             onError = { throwable ->
-                _state.update {
+                _screenState.update {
                     it.copy(
-                        error = throwable
+                        errorUiState = throwable
                     )
                 }
             },
